@@ -18,3 +18,22 @@ routes.
 
 # brochures-travories
 
+## Docker
+
+Copy `.env.example` to `.env` and set `BROCHURE_SERVICE_TOKEN` and `PORT`, then:
+
+```sh
+docker compose up --build
+```
+
+Compose reads `.env` for both the container environment and the published
+port. Without Compose:
+
+```sh
+docker build -t travories-brochures .
+docker run --rm --env-file .env -p 3001:3001 travories-brochures
+```
+
+The image runs a single esbuild bundle (`npm run build` → `dist/server.mjs`)
+on `node:22-slim` with the brochure fonts alongside it; no `node_modules` ship
+in the final image.

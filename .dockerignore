@@ -1,0 +1,9 @@
+node_modules
+dist
+output
+api
+.git
+.env
+.env.*
+*.log
+browserpath.local.tsx
