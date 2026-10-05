@@ -2,7 +2,7 @@ import type { BrochurePackageSource } from "./source.js";
 
 const SITE_ORIGIN = "https://travories.com";
 
-/** Shape returned by `GET /agency-package/resolve-path`. */
+/** Shape returned by `GET /packages/resolve`. */
 interface ResolvedPath {
   canonicalPath?: string | null;
 }
@@ -29,7 +29,7 @@ export async function resolvePackageUrl(pkg: BrochurePackageSource): Promise<str
 
   try {
     const response = await fetch(
-      `${base}/agency-package/resolve-path?path=${encodeURIComponent(`/package/${slug}`)}`,
+      `${base}/packages/resolve?path=${encodeURIComponent(`/package/${slug}`)}`,
       { cache: "no-store" },
     );
     if (!response.ok) return null;
