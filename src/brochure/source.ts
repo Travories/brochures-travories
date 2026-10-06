@@ -7,6 +7,11 @@
  */
 export interface BrochurePackageSource {
   id?: string;
+  /** Canonical public path, e.g. `/trekking/everest-base-camp-trek/cmnu`. */
+  url?: string | null;
+  /** Package code — the last segment of the public URL. */
+  packageCode?: string | null;
+  /** Old agency-suffixed slug; only older payloads carry it. */
   slug?: string | null;
   title?: string | null;
   agencyName?: string | null;

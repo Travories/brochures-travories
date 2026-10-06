@@ -10,26 +10,25 @@ interface ResolvedPath {
 /**
  * Public URL for a package, or null when it has no public page.
  *
- * The agency detail payload carries none of `url`, `activitySlug` or
- * `packageCode`, so the canonical `/{activitySlug}/{routeSlug}/{packageCode}`
- * path cannot be composed locally — `uniqueCode` ("VH-NPHHL8QJ") is a different
- * identifier from `packageCode` ("hij"), and guessing produces a link that
- * soft-404s. Instead we ask the resolver that already backs every package 301:
- * it accepts the legacy `/package/{slug}` alias, which the payload *does* have.
+ * Package payloads carry their canonical `url` and `packageCode`; the
+ * agency-suffixed `slug` is gone from the API. We still ask the resolver that
+ * backs every package 301, by code (or, for an older payload, by slug):
+ * `uniqueCode` ("VH-NPHHL8QJ") is a different identifier from `packageCode`
+ * ("hij") and must never be used here.
  *
  * Returns null for unpublished packages — the resolver answers null for
  * anything not live, and a QR code pointing at a 404 is worse than none.
  */
 export async function resolvePackageUrl(pkg: BrochurePackageSource): Promise<string | null> {
-  const slug = pkg.slug?.trim();
-  if (!slug) return null;
+  const ref = pkg.packageCode?.trim() || pkg.slug?.trim();
+  if (!ref) return null;
 
   const base = (process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL)?.replace(/\/$/, "");
   if (!base) return null;
 
   try {
     const response = await fetch(
-      `${base}/packages/resolve?path=${encodeURIComponent(`/package/${slug}`)}`,
+      `${base}/packages/resolve?path=${encodeURIComponent(`/package/${ref}`)}`,
       { cache: "no-store" },
     );
     if (!response.ok) return null;
